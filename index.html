@@ -1,26 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Red Pines Zine</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Pines Terminal Archive</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff66;
+    font-family: "Courier New", monospace;
+    margin: 0;
+    padding: 20px;
+  }
+
+  #terminal {
+    white-space: pre-wrap;
+    line-height: 1.4;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  #command {
+    background: black;
+    color: #00ff66;
+    border: none;
+    font-family: monospace;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    display: none;
+  }
+
+  .glitch {
+    animation: glitch 2s infinite;
+  }
+
+  @keyframes glitch {
+    0% { text-shadow: 2px 0 red, -2px 0 blue; }
+    20% { text-shadow: -2px 0 red, 2px 0 blue; }
+    40% { text-shadow: 2px 2px red, -2px -2px blue; }
+    60% { text-shadow: -2px -2px red, 2px 2px blue; }
+    80% { text-shadow: 0 2px red, 0 -2px blue; }
+    100% { text-shadow: 0 0 5px #00ff66; }
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>>> RED PINES ARCHIVE</h1>
-    <p>Strange reports. Hidden patterns. Whispered truths.</p>
-  </header>
+<pre id="terminal"></pre>
+<input id="command" type="text" autofocus autocomplete="off">
 
-  <nav>
-    <ul>
-      <li><a href="issue1.html">[ ISSUE 01 ]</a></li>
-      <li><a href="issue2.html">[ ISSUE 02 ]</a></li>
-      <li><a href="locals.html">[ LOCAL SUBMISSIONS ]</a></li>
-    </ul>
-  </nav>
+<script>
+const terminal = document.getElementById("terminal");
+const input = document.getElementById("command");
 
-  <footer>
-    <p>Access Level: PUBLIC // Red Pines Café Terminal</p>
-  </footer>
+// Boot sequence
+const bootLines = [
+  "WEYLAND-YUTANI SYSTEMS v4.3",
+  "INITIALIZING RED PINES NODE...",
+  "CHECKING NETWORK...",
+  "ACCESS GRANTED",
+  "Type 'help' for commands.\n"
+];
+
+let bootIndex = 0;
+function typeLine(line, callback) {
+  let i = 0;
+  function type() {
+    if (i < line.length) {
+      terminal.textContent += line.charAt(i);
+      i++;
+      setTimeout(type, 30 + Math.random()*50);
+    } else {
+      terminal.textContent += "\n";
+      if (callback) callback();
+    }
+  }
+  type();
+}
+
+function boot() {
+  if (bootIndex < bootLines.length) {
+    typeLine(bootLines[bootIndex], () => {
+      bootIndex++;
+      boot();
+    });
+  } else {
+    input.style.display = "block";
+    input.focus();
+  }
+}
+boot();
+
+// Zine entries object (add new entries here!)
+const zineEntries = {
+  issue01: "Issue 01: A strange radio signal repeating the same four notes every night at 3:11AM...",
+  issue02: "Issue 02: Locals report seeing a tall figure walking the highway shoulder...",
+  issue03: "Issue 03: A note left on a café table reads: 'Do not trust the holographic birds.'",
+  issue04: "Issue 04: Infrared traces in the Red Pines woods suggest someone—or something—has been watching."
+};
+
+// Other commands
+const commands = {
+  help: "Available commands:\nlist\nopen [entry]\nabout\nlocals",
+  list: () => {
+    let output = "Entries:\n";
+    for (let key in zineEntries) {
+      output += `${key} - ${zineEntries[key].split("\n")[0].slice(0, 30)}...\n`;
+    }
+    return output;
+  },
+  about: "Red Pines Zine: documenting the strange, occult, and conspiratorial.",
+  locals: "Local Submissions: handwritten zines, notes, and cassette tapes."
+};
+
+// Handle user input
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    let cmd = input.value.trim().toLowerCase();
+    terminal.textContent += `redpines:~$ ${cmd}\n`;
+
+    if (cmd.startsWith("open ")) {
+      const entry = cmd.split(" ")[1];
+      if (zineEntries[entry]) {
+        terminal.textContent += zineEntries[entry] + "\n";
+      } else {
+        terminal.textContent += "Entry not found. Type 'list' to see all entries.\n";
+      }
+    } else if (commands[cmd]) {
+      let output = typeof commands[cmd] === "function" ? commands[cmd]() : commands[cmd];
+      terminal.textContent += output + "\n";
+    } else {
+      terminal.textContent += "Command not found. Type 'help' for available commands.\n";
+    }
+
+    input.value = "";
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+});
+</script>
 </body>
 </html>
