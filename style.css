@@ -1,17 +1,35 @@
 body {
-  background-color: #000;
-  color: #00ff66;
+  background-color: #111;
+  color: #0f0;
   font-family: "Courier New", monospace;
-  padding: 20px;
+  margin: 2em;
+}
+
+header h1 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 a {
-  color: #ff0066;
+  color: #0f0;
   text-decoration: none;
 }
 
-.terminal {
-  max-width: 800px;
-  margin: auto;
-  white-space: pre-wrap;
+a:hover {
+  text-decoration: underline;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav li {
+  margin: 0.5em 0;
+}
+
+footer {
+  margin-top: 3em;
+  font-size: 0.8em;
+  color: #090;
 }
