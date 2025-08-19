@@ -1,22 +1,17 @@
 body {
-  background-color: black;
-  color: #00ff00;
+  background-color: #000;
+  color: #00ff66;
   font-family: "Courier New", monospace;
-  margin: 0;
   padding: 20px;
 }
 
-#terminal {
-  max-width: 800px;
-  margin: 0 auto;
+a {
+  color: #ff0066;
+  text-decoration: none;
 }
 
-#input {
-  width: 100%;
-  background: black;
-  border: none;
-  color: #00ff00;
-  font-family: "Courier New", monospace;
-  font-size: 16px;
-  outline: none;
+.terminal {
+  max-width: 800px;
+  margin: auto;
+  white-space: pre-wrap;
 }
