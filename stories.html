@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Pines Zine - Stories</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+/* Make post links block-level and remove underlines */
+.post-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.post-link:hover .post {
+  transform: translateY(-4px);
+  box-shadow: 0 0 15px #33ff66;
+}
+</style>
+</head>
+
+<!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<!-- Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<!-- Your stories JS -->
+<script src="assets/js/stories-console.js"></script>
+
+
+<body>
+
+<div class="posts-container scanlines">
+
+  <a href="articles/midnight-frequencies.html" class="post-link">
+    <div class="post">
+      <div class="post-header">
+        <span class="post-date">[2025-08-20]</span>
+        <span class="post-title">Midnight Frequencies</span>
+      </div>
+      <div class="post-content">
+        <p>The radio in town plays the same four notes at 3:11AM nightly. Technicians can't trace the signal.</p>
+        <img src="assets/midnight-frequencies.png" alt="Radio Signal">
+        <div class="tag-list">
+          <span class="tag">#mystery</span>
+          <span class="tag">#occult</span>
+          <span class="tag">#radio</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <a href="articles/man-in-the-pines.html" class="post-link">
+    <div class="post">
+      <div class="post-header">
+        <span class="post-date">[2025-08-19]</span>
+        <span class="post-title">The Man in the Pines</span>
+      </div>
+      <div class="post-content">
+        <p>A shadowy figure wanders the highway shoulder at night. No footprints. Cameras fail to capture him.</p>
+        <img src="assets/pines.jpg" alt="Shadowy Figure">
+        <div class="tag-list">
+          <span class="tag">#weird</span>
+          <span class="tag">#local</span>
+          <span class="tag">#urban-legend</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+  <a href="articles/holographic-birds.html" class="post-link">
+    <div class="post">
+      <div class="post-header">
+        <span class="post-date">[2025-08-18]</span>
+        <span class="post-title">Holographic Birds</span>
+      </div>
+      <div class="post-content">
+        <p>The Red Pines Café reports holographic birds appearing to some patrons. Messages in code?</p>
+        <img src="assets/bird.jpg" alt="Holographic Birds">
+        <div class="tag-list">
+          <span class="tag">#strange</span>
+          <span class="tag">#local</span>
+          <span class="tag">#cafe</span>
+        </div>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<!-- Terminal input at the bottom -->
+<div id="terminal" style="margin-top:20px;"></div>
+
+<script src="assets/js/stories-console.js"></script>
+</body>
+</html>

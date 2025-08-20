@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Pines Zine - Boot</title>
+<style>
+body {
+  margin: 0;
+  font-family: "Courier New", monospace;
+  background-color: #000;
+  color: #33ff66;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+
+@font-face {
+  font-family: "Terminus";
+  src: url("assets/fonts/Terminus.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: "Terminus", monospace;
+  background-color: #000;
+  color: #33ff66;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+#terminal {
+  font-family: "Terminus", monospace;
+  padding: 20px;
+  height: 100vh;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+
+#terminal {
+  padding: 20px;
+  height: 100vh;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 10px;
+  background-color: #33ff66;
+  animation: blink 1s step-start infinite;
+  margin-left: 2px;
+  vertical-align: bottom;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Glitch effect for terminal text */
+.glitch {
+  animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red, -2px 0 blue; }
+  20% { text-shadow: -2px 0 red, 2px 0 blue; }
+  40% { text-shadow: 2px 2px red, -2px -2px blue; }
+  60% { text-shadow: -2px -2px red, 2px 2px blue; }
+  80% { text-shadow: 0 2px red, 0 -2px blue; }
+  100% { text-shadow: 0 0 5px #33ff66; }
+}
+
+/* Scanlines overlay */
+#terminal::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+}
+
+input {
+  background: none;
+  border: none;
+  color: #33ff66;
+  font-family: monospace;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+}
+</style>
+</head>
+<body>
+<div id="terminal"></div>
+
+<script>
+const terminal = document.getElementById('terminal');
+
+const bootLines = [
+  "Red Pines Zine OS v1.0",
+  "Initializing memory...",
+  "Checking filesystem...",
+  "Loading modules...",
+  "Starting interface...",
+  "System ready.",
+  "",
+  "Type 'help' for commands."
+];
+
+let lineIndex = 0;
+
+// Utility: random flicker character
+function randomChar() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+  return chars[Math.floor(Math.random() * chars.length)];
+}
+
+// Typing effect with glitch
+function typeLineGlitch(text, callback, i = 0) {
+  if (i < text.length) {
+    // Occasionally insert random glitch char
+    if (Math.random() < 0.05) {
+      terminal.innerHTML += randomChar();
+    } else {
+      terminal.innerHTML += text[i];
+    }
+    i++;
+    terminal.scrollTop = terminal.scrollHeight;
+    setTimeout(() => typeLineGlitch(text, callback, i), 30 + Math.random() * 50); // variable speed
+  } else {
+    // Occasionally flash a glitch after the line
+    if (Math.random() < 0.3) {
+      const glitchSpan = document.createElement('span');
+      glitchSpan.classList.add('glitch');
+      glitchSpan.textContent = text;
+      terminal.appendChild(glitchSpan);
+      setTimeout(() => {
+        glitchSpan.remove();
+        terminal.innerHTML += text + "\n";
+        callback();
+      }, 300);
+    } else {
+      terminal.innerHTML += "\n";
+      callback();
+    }
+  }
+}
+
+function printBootSequence() {
+  if (lineIndex < bootLines.length) {
+    typeLineGlitch(bootLines[lineIndex], () => {
+      lineIndex++;
+      printBootSequence();
+    });
+  } else {
+    showPrompt();
+  }
+}
+
+// Show command prompt
+function showPrompt() {
+  const promptLine = document.createElement('span');
+  promptLine.classList.add('prompt');
+  promptLine.textContent = '> ';
+  terminal.appendChild(promptLine);
+
+  const input = document.createElement('input');
+  terminal.appendChild(input);
+
+  const cursor = document.createElement('span');
+  cursor.classList.add('cursor');
+  terminal.appendChild(cursor);
+
+  input.focus();
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      cursor.remove();
+      const command = input.value.trim().toLowerCase();
+      terminal.innerHTML += input.value + "\n";
+      input.remove();
+      handleCommand(command);
+    }
+  });
+}
+
+// Command handling
+function handleCommand(cmd) {
+  switch(cmd) {
+    case "help":
+      terminal.innerHTML += "Available commands:\n";
+      terminal.innerHTML += "stories  - Go to stories.html\n";
+      terminal.innerHTML += "about    - About the zine\n";
+      terminal.innerHTML += "clear    - Clear screen\n";
+      break;
+    case "stories":
+      window.location.href = "stories.html";
+      return;
+    case "about":
+      terminal.innerHTML += "Red Pines Zine is a cyberpunk-inspired digital zine.\n";
+      break;
+    case "clear":
+      terminal.innerHTML = "";
+      break;
+    default:
+      terminal.innerHTML += "Unknown command. Type 'help' for a list of commands.\n";
+  }
+  showPrompt();
+}
+
+// Start boot
+printBootSequence();
+</script>
+</body>
+</html>
