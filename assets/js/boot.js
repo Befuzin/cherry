@@ -1,18 +1,17 @@
 const terminal = document.getElementById('terminal');
 
 const bootLines = [
-  "Red Pines Zine OS v1.0",
+  "The Signal OS v1.0",
   "Initializing memory...",
   "Checking filesystem...",
   "Loading modules...",
   "Starting interface...",
   "System ready.",
   "",
-
 ];
 
 let lineIndex = 0;
-let authenticated = false; // new flag to track if password was entered
+let authenticated = false; // track if password was entered
 
 // Random flicker character
 function randomChar() {
@@ -139,31 +138,34 @@ function showPrompt() {
 }
 
 // Handle commands
-function handleCommand(cmd) {
-  switch(cmd) {
-    case "help":
-      if (authenticated) {
-        terminal.innerHTML += "Available commands:\n";
-        terminal.innerHTML += "stories  - Latest News\n";
-        terminal.innerHTML += "about    - About the zine\n";
-        terminal.innerHTML += "clear    - Clear screen\n";
-      } else {
-        terminal.innerHTML += "Unknown command. Type the correct password to unlock commands.\n";
-      }
-      break;
-    case "stories":
-      window.location.href = "stories.html";
-      return;
-    case "about":
-      terminal.innerHTML += "Red Pines Zine is maintained by @Mez.\n";
-      break;
-    case "clear":
-      terminal.innerHTML = "";
-      break;
-    default:
-      terminal.innerHTML += "Unknown command. Type 'help' for a list of commands.\n";
-  }
-  showPrompt();
+function showPrompt() {
+  // Remove any existing cursor
+  const existingCursor = terminal.querySelector('.cursor');
+  if (existingCursor) existingCursor.remove();
+
+  const promptLine = document.createElement('span');
+  promptLine.classList.add('prompt');
+  promptLine.textContent = '> ';
+  terminal.appendChild(promptLine);
+
+  const input = document.createElement('input');
+  terminal.appendChild(input);
+
+  const cursor = document.createElement('span');
+  cursor.classList.add('cursor');
+  terminal.appendChild(cursor);
+
+  input.focus();
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === "Enter") {
+      cursor.remove(); // remove current cursor
+      const command = input.value.trim().toLowerCase();
+      terminal.innerHTML += input.value + "\n";
+      input.remove();
+      handleCommand(command);
+    }
+  });
 }
 
 // Start boot

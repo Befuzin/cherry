@@ -72,10 +72,20 @@ input {
 /* ==============================
    SCANLINES OVERLAY
 ============================== */
-.scanlines::after {
+
+.post {
+  position: relative; /* so ::after positions correctly */
+  background-color: #111; /* keep your subtle card contrast */
+  overflow: hidden; /* ensures scanlines don’t spill out */
+}
+
+.post::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: repeating-linear-gradient(
     to bottom,
     rgba(255,255,255,0.03) 0px,
@@ -84,6 +94,7 @@ input {
     transparent 2px
   );
   pointer-events: none;
+  z-index: 2;
 }
 
 /* ==============================
