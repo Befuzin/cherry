@@ -138,34 +138,64 @@ function showPrompt() {
 }
 
 // Handle commands
-function showPrompt() {
-  // Remove any existing cursor
-  const existingCursor = terminal.querySelector('.cursor');
-  if (existingCursor) existingCursor.remove();
+function handleCommand(cmd) {
+  switch(cmd) {
+    case "help":
+      if (authenticated) {
+        terminal.innerHTML += "Available commands:\n";
+        terminal.innerHTML += "stories  - Latest News\n";
+        terminal.innerHTML += "about    - About the zine\n";
+        terminal.innerHTML += "clear    - Clear screen\n";
+        terminal.innerHTML += "showimg  - Display an image\n";
+      } else {
+        terminal.innerHTML += "Unknown command. Type the correct password to unlock commands.\n";
+      }
+      showPrompt();
+      break;
 
-  const promptLine = document.createElement('span');
-  promptLine.classList.add('prompt');
-  promptLine.textContent = '> ';
-  terminal.appendChild(promptLine);
+    case "stories":
+      window.location.href = "stories.html";
+      break; // no prompt because we’re leaving the page
 
-  const input = document.createElement('input');
-  terminal.appendChild(input);
+    case "about":
+      terminal.innerHTML += "Red Pines Zine is maintained by @Mez.\n";
+      showPrompt();
+      break;
 
-  const cursor = document.createElement('span');
-  cursor.classList.add('cursor');
-  terminal.appendChild(cursor);
+    case "clear":
+      terminal.innerHTML = "";
+      showPrompt();
+      break;
 
-  input.focus();
+    case "showimg":
+      typeLineGlitch("Decoding image...\n", () => {
+        const asciiImage = [
+          "⠀⠀⢀⣀⣀⣀⡀⠀⠀⠀⠀",
+          "⠀⢰⣿⣿⣿⣿⣿⣷⡄⠀⠀",
+          "⠀⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀",
+          "⠀⢸⣿⣿⣿⣿⣿⣿⡇⠀⠀",
+          "⠀⠈⠻⣿⣿⣿⣿⠟⠁⠀⠀"
+        ];
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === "Enter") {
-      cursor.remove(); // remove current cursor
-      const command = input.value.trim().toLowerCase();
-      terminal.innerHTML += input.value + "\n";
-      input.remove();
-      handleCommand(command);
-    }
-  });
+        function typeAsciiLine(index = 0) {
+          if (index < asciiImage.length) {
+            typeLineGlitch(asciiImage[index] + "\n", () => {
+              typeAsciiLine(index + 1);
+            });
+          } else {
+            terminal.innerHTML += "\n";
+            showPrompt();
+          }
+        }
+
+        typeAsciiLine();
+      });
+      break;
+
+    default:
+      terminal.innerHTML += "Unknown command. Type 'help' for a list of commands.\n";
+      showPrompt();
+  }
 }
 
 // Start boot
